@@ -10,7 +10,7 @@ void main() {
    for (int i = 0; i < 15; i++) {
       printf("%d ", data[i]); //데이터 출력
    }
-   printf("\t-정렬 전");
+   printf("\t-정렬 전\n");
    while (1) {
       printf("어떤 정렬을 할지 선택해주세요.\n1. 쉘정렬  2. 삽입정렬  3. 선택정렬\n");
       scanf("%d", &menu);
@@ -32,4 +32,23 @@ void main() {
       }
    }
    system("pause");
+}
+
+void insertsort() {
+   int i, j, t, temp;
+   printf("\n정렬할 원소 :");
+   for (t = 0; t < 15; t++) printf("%d ", data[t]);
+   printf("\n\n---------- 삽입 정렬 시작 ----------\n");
+   for (i = 1; i < 15; i++) {
+      temp = data[i];
+      j = i;
+      while ((j > 0) && (data[j - 1] > temp))
+      {
+         data[j] = data[j - 1];
+         j = j - 1;
+      }
+      data[j] = temp;
+      printf("\n %d단계 : ", i);
+      for (t = 0; t < 15; t++)printf("%d ", data[t]);
+   }
 }
