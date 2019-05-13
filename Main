@@ -81,6 +81,27 @@ public Main(){
 	initialize();
 }
 
+// 현재의 단어 목록을 세팅하는 함수입니다.
+   private void listSetting()
+   {
+      // 리스트 모델을 초기화합니다.
+      listEnglishModel = new DefaultListModel();
+      listKoreanModel = new DefaultListModel();
+      // 현재 단어장 리스트에 있는 모든 정보를 리스트 모델에 담습니다.
+      for(int i = 0; i < vocabulary.size(); i++)
+      {
+         listEnglishModel.addElement((i + 1) + ". " + vocabulary.get(i).getEnglish());
+         listKoreanModel.addElement((i + 1) + ". " + vocabulary.get(i).getKorean());
+      }
+      // 각각의 리스트가 리스트 모델을 포함하여 보여지게 됩니다.
+      listEnglishList.setModel(listEnglishModel);
+      listKoreanList.setModel(listKoreanModel);
+      // 테스트 결과를 초기화합니다.
+      testTotalCountText.setText(vocabulary.size() + " 개");
+      testResultText.setText("");
+      testFailCountText.setText("");
+   }
+
 private void initialize()
 {
 	frame = new JFrame();
