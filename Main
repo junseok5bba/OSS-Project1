@@ -17,9 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
-import kr.ac.sunmoon.Main;
-
-public class test {
+public class Main {
 	private JFrame frame;
 
 	   // 단어 리스트 모델을 의미합니다.
@@ -35,7 +33,7 @@ public class test {
 	      EventQueue.invokeLater(new Runnable() {
 	         public void run() {
 	            try {
-	               test window = new test();
+	               Main window = new Main();
 	               window.frame.setVisible(true);
 	               // 프로그램을 화면의 중간으로 맞추도록 합니다.
 	               Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -47,13 +45,13 @@ public class test {
 	      });
 	   }
 
-public test(){
-	test1();
+public Main(){
+	initialize();
 }
 
-private void test1()
+private void initialize()
 {
-	frame = new JFrame();
+    frame = new JFrame();
     frame.setFont(new Font("맑은 고딕", Font.BOLD, 20));
     frame.setTitle("영어 단어장 프로그램");
     frame.setBounds(100, 100, 800, 600);
