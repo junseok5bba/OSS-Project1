@@ -74,7 +74,7 @@ public class Main{
 	               e.printStackTrace();
 	            }
 	         }
-	      })
+	      });
 	   }
 
 public Main(){
@@ -133,6 +133,38 @@ private void initialize()
     
     // 메뉴바의 저장하기 버튼입니다.
     JMenuItem saveFile = new JMenuItem("저장하기");
+    saveFile.addActionListener(new ActionListener() {
+        // 파일을 저장하는 액션 함수입니다.
+        public void actionPerformed(ActionEvent e) {
+           // 파일을 선택할 수 있도록 합니다.
+           JFileChooser fs = new JFileChooser(new File("c:\\"));
+           fs.setDialogTitle("파일 저장하기");
+           fs.setFileFilter(new FileTypeFilter(".dat", "Data File"));
+           int result = fs.showSaveDialog(null);
+           // 파일 선택에 성공한 경우입니다.
+           if(result == JFileChooser.APPROVE_OPTION)
+           {
+              // 선택한 파일을 파일 객체로서 설정합니다.
+              File file = fs.getSelectedFile();
+              try
+              {
+                 // 파일을 열어 해당 파일에 모든 단어 리스트를 출력합니다.
+                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file.getPath() + ".dat")));
+                 for(int i = 0; i < vocabulary.size(); i++)
+                 {
+                    bw.write(vocabulary.get(i).getEnglish() + ":" + vocabulary.get(i).getKorean() + "\r\n");
+                 }
+                 // 작성 완료 후 파일 버퍼를 닫습니다.
+                 bw.close();
+              }
+              catch (Exception e2)
+              {
+                 JOptionPane.showMessageDialog(null, e2.getMessage());
+              }
+           }
+           listSetting();
+        }
+     });
     saveFile.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
     menu.add(saveFile);
     
