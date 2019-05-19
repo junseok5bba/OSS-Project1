@@ -255,9 +255,41 @@ private void initialize()
     frame.getContentPane().add(testPanel);
     testPanel.setLayout(null);
     
-    // 테스트 시작 버튼입니다.
-    JButton testButton = new JButton("테스트 시작");
-    testButton.setBackground(SystemColor.control);
+     /* 테스트 관련 변수 및 설정이 들어있는 테스트 패널입니다. */
+      JPanel testPanel = new JPanel();
+      testPanel.setBackground(Color.WHITE);
+      testPanel.setForeground(Color.BLACK);
+      testPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+      testPanel.setBounds(419, 223, 344, 223);
+      frame.getContentPane().add(testPanel);
+      testPanel.setLayout(null);
+      
+      // 테스트 시작 버튼입니다.
+      JButton testButton = new JButton("테스트 시작");
+      testButton.setBackground(SystemColor.control);
+      testButton.addActionListener(new ActionListener() {
+         // 테스트를 진행하는 함수입니다.
+         public void actionPerformed(ActionEvent e) {
+            String english;
+            ArrayList<Word> testWords = new ArrayList<Word>();
+            int failCount = 0;
+            // 단어 리스트를 잠시 동안 숨깁니다.
+            listEnglishModel.clear();
+            listKoreanModel.clear();
+            for(int i = 0; i < vocabulary.size(); i++)
+            {
+               // 반복적으로 단어의 정답을 물어봅니다.
+               english = JOptionPane.showInputDialog((i + 1) + "번째 단어 : '" + vocabulary.get(i).getKorean() + "' 현재까지 총 틀린 횟수 : " + failCount);
+               if(english == null || !english.equalsIgnoreCase(vocabulary.get(i).getEnglish()))
+               {
+                  testWords.add(new Word(english, vocabulary.get(i).getKorean()));
+                  failCount++;
+               }
+               else
+               {
+                  testWords.add(new Word(english, vocabulary.get(i).getKorean()));
+               }
+            }
     testButton.setFont(new Font("맑은 고딕", Font.BOLD, 15));
     testButton.setBounds(180, 164, 126, 33);
     testPanel.add(testButton);
