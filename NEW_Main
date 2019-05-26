@@ -1,0 +1,335 @@
+package kr.ac.sunmoon;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.OutputStreamWriter;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+
+public class Vocabulary{
+   private JFrame frame;
+      private JLabel wordlist;
+
+      // 단어 리스트 모델을 의미합니다.
+      static DefaultListModel listEnglishModel = new DefaultListModel();
+      static DefaultListModel listKoreanModel = new DefaultListModel();
+      
+      // 단어 리스트를 의미합니다.
+      static JList listEnglishList = new JList();
+      static JList listKoreanList = new JList();
+      private JTextField testTotalCountText;
+      private JTextField testResultText;
+      private JTextField testFailCountText;
+      private JTextField addEnglishText;
+      private JTextField addKoreanText;
+      
+      // 프로그램을 실행하는 부분입니다.
+      public static void main(String[] args) {
+         EventQueue.invokeLater(new Runnable() {
+            public void run() {
+               try {
+                  Vocabulary window = new Vocabulary();
+                  window.frame.setVisible(true);
+                  // 프로그램을 화면의 중간으로 맞추도록 합니다.
+                  Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+                  window.frame.setLocation(dim.width/2 - window.frame.getSize().width/2, dim.height/2 - window.frame.getSize().height/2);
+               } catch (Exception e) {
+                  e.printStackTrace();
+               }
+            }
+         });
+      }
+
+public Vocabulary(){
+   initialize();
+}
+
+private void initialize()
+{
+   frame = new JFrame();
+    frame.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+    frame.setTitle("영어 단어장 프로그램");
+    frame.setBounds(100, 100, 800, 600);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.getContentPane().setLayout(null);
+    
+    // 메뉴바를 생성합니다.
+    JMenuBar menuBar = new JMenuBar();
+    menuBar.setBounds(0, 0, 782, 26);
+    frame.getContentPane().add(menuBar);
+    
+    JMenu mnNewMenu = new JMenu("\uD30C\uC77C");
+    mnNewMenu.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
+    menuBar.add(mnNewMenu);
+    
+    JMenuItem menuItem = new JMenuItem("\uC0C8 \uB2E8\uC5B4\uC7A5");
+    menuItem.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
+    mnNewMenu.add(menuItem);
+    
+    JMenuItem menuItem_1 = new JMenuItem("\uBD88\uB7EC\uC624\uAE30");
+    menuItem_1.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
+    mnNewMenu.add(menuItem_1);
+    
+    JMenu menu = new JMenu("\uC624\uB2F5\uB178\uD2B8");
+    menuBar.add(menu);
+    
+    JMenuItem menuItem_2 = new JMenuItem("\uB9CC\uB4E4\uAE30");
+    menuItem_2.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
+    menu.add(menuItem_2);
+    
+    JMenuItem menuItem_3 = new JMenuItem("\uBD88\uB7EC\uC624\uAE30");
+    menuItem_3.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
+    menu.add(menuItem_3);
+    
+    JMenuItem mntmNewMenuItem_1 = new JMenuItem("\uC218\uB2A5");
+    mntmNewMenuItem_1.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
+    menuBar.add(mntmNewMenuItem_1);
+    
+    JMenuItem mntmNewMenuItem = new JMenuItem("\uD1A0\uC775");
+    mntmNewMenuItem.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
+    menuBar.add(mntmNewMenuItem);
+    
+    JMenuItem mntmNewMenuItem_2 = new JMenuItem("\uD1A0\uD50C");
+    mntmNewMenuItem_2.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
+    menuBar.add(mntmNewMenuItem_2);
+    
+    /* 단어를 추가하는 기능의 패널입니다. */
+    JPanel addWordPanel = new JPanel();
+    addWordPanel.setBackground(Color.WHITE);
+    addWordPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+    addWordPanel.setBounds(419, 36, 343, 177);
+    frame.getContentPane().add(addWordPanel);
+    addWordPanel.setLayout(null);
+    
+    JLabel addEnglishLabel = new JLabel("영단어");
+    addEnglishLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    addEnglishLabel.setBounds(26, 36, 62, 18);
+    addWordPanel.add(addEnglishLabel);
+    
+    JLabel addKoreanLabel = new JLabel("해석");
+    addKoreanLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    addKoreanLabel.setBounds(26, 80, 62, 18);
+    addWordPanel.add(addKoreanLabel);
+    
+    addEnglishText = new JTextField();
+    addEnglishText.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    addEnglishText.setBounds(97, 33, 130, 24);
+    addWordPanel.add(addEnglishText);
+    addEnglishText.setColumns(10);
+    
+    addKoreanText = new JTextField();
+    addKoreanText.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    addKoreanText.setColumns(10);
+    addKoreanText.setBounds(97, 77, 130, 24);
+    addWordPanel.add(addKoreanText);
+    
+    // 단어 추가 버튼입니다.
+    JButton addWordButton = new JButton("추가");
+    addWordButton.setBackground(SystemColor.control);
+    addWordButton.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+    addWordButton.setBounds(239, 33, 80, 68);
+    addWordPanel.add(addWordButton);
+    
+    /* 단어 목록을 보여주는 기능의 패널입니다. */
+    JPanel listPanel = new JPanel();
+    listPanel.setBackground(Color.WHITE);
+    listPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+    listPanel.setBounds(10, 36, 397, 503);
+    frame.getContentPane().add(listPanel);
+    listPanel.setLayout(null);
+    
+    JScrollPane listEnglishPane = new JScrollPane();
+    listEnglishPane.setBounds(14, 63, 185, 428);
+    listPanel.add(listEnglishPane);
+    
+    listEnglishList = new JList();
+    listEnglishList.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    listEnglishPane.setViewportView(listEnglishList);
+    
+    JScrollPane listKoreanPane = new JScrollPane();
+    listKoreanPane.setBounds(198, 63, 185, 428);
+    listPanel.add(listKoreanPane);
+    
+    listKoreanList = new JList();
+    listKoreanList.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    listKoreanPane.setViewportView(listKoreanList);
+    
+    JLabel listEnglishLabel = new JLabel("영단어");
+    listEnglishLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    listEnglishLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    listEnglishLabel.setBounds(71, 32, 62, 18);
+    listPanel.add(listEnglishLabel);
+    
+    JLabel listKoreanLabel = new JLabel("해석");
+    listKoreanLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    listKoreanLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    listKoreanLabel.setBounds(259, 33, 62, 18);
+    listPanel.add(listKoreanLabel);
+
+    /* 테스트 관련 변수 및 설정이 들어있는 테스트 패널입니다. */
+    JPanel testPanel = new JPanel();
+    testPanel.setBackground(Color.WHITE);
+    testPanel.setForeground(Color.BLACK);
+    testPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+    testPanel.setBounds(419, 223, 344, 223);
+    frame.getContentPane().add(testPanel);
+    testPanel.setLayout(null);
+    
+    // 테스트 시작 버튼입니다.
+    JButton testButton = new JButton("테스트 시작");
+    testButton.setBackground(SystemColor.control);
+    testButton.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+    testButton.setBounds(180, 164, 126, 33);
+    testPanel.add(testButton);
+    
+    JLabel testTotalCountLabel = new JLabel("총 단어 수");
+    testTotalCountLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    testTotalCountLabel.setBounds(24, 25, 119, 33);
+    testPanel.add(testTotalCountLabel);
+    
+    testTotalCountText = new JTextField();
+    testTotalCountText.setBackground(Color.WHITE);
+    testTotalCountText.setHorizontalAlignment(SwingConstants.RIGHT);
+    testTotalCountText.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    testTotalCountText.setEditable(false);
+    testTotalCountText.setBounds(143, 24, 163, 36);
+    testPanel.add(testTotalCountText);
+    testTotalCountText.setColumns(10);
+    
+    JLabel testResultLabel = new JLabel("최근 점수");
+    testResultLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    testResultLabel.setBounds(24, 68, 119, 33);
+    testPanel.add(testResultLabel);
+    
+    testResultText = new JTextField();
+    testResultText.setBackground(Color.WHITE);
+    testResultText.setHorizontalAlignment(SwingConstants.RIGHT);
+    testResultText.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    testResultText.setEditable(false);
+    testResultText.setColumns(10);
+    testResultText.setBounds(143, 68, 163, 36);
+    testPanel.add(testResultText);
+    
+    JLabel testFailCountLabel = new JLabel("최근 틀린 개수");
+    testFailCountLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    testFailCountLabel.setBounds(24, 111, 119, 33);
+    testPanel.add(testFailCountLabel);
+    
+    testFailCountText = new JTextField();
+    testFailCountText.setForeground(Color.BLACK);
+    testFailCountText.setBackground(Color.WHITE);
+    testFailCountText.setHorizontalAlignment(SwingConstants.RIGHT);
+    testFailCountText.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+    testFailCountText.setEditable(false);
+    testFailCountText.setColumns(10);
+    testFailCountText.setBounds(143, 111, 163, 36);
+    testPanel.add(testFailCountText);
+    
+    JPanel panel = new JPanel();
+    panel.setBackground(Color.WHITE);
+    panel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+    panel.setBounds(419, 456, 343, 73);
+    frame.getContentPane().add(panel);
+    panel.setLayout(null);
+    
+    JButton miniButton = new JButton("미니 모드");
+    miniButton.setBackground(SystemColor.control);
+
+    miniButton.setBounds(19, 10, 149, 53);
+    miniButton.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+    panel.add(miniButton);
+    
+    JButton quitbutton = new JButton("\uC885\uB8CC");
+    quitbutton.setBackground(Color.LIGHT_GRAY);
+    quitbutton.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+    quitbutton.setBounds(175, 10, 149, 53);
+    panel.add(quitbutton);
+ }
+}
+
+
+
+
+/* db연결 test
+package kr.ac.sunmoon;
+
+import java.sql.*;
+
+ 
+
+public class test{
+
+ 
+
+ public static void main(String[] args) {
+   String url = "jdbc:mysql://127.0.0.1:3306?serverTimezone=Asia/Seoul&user=root&password=akrcns";//사용하는 데이터베이스명을 포함한 url
+ 
+   Connection conn=null;
+   Statement stmt=null;
+   ResultSet rs=null;
+   try{
+	   Class.forName("com.mysql.cj.jdbc.Driver");
+	   System.out.println("드라이버 연결성공");
+	   
+	   conn = DriverManager.getConnection(url);
+	   System.out.println("데이터베이스 접속 성공!");
+	   
+	   stmt = conn.createStatement();
+	   String usevocabulary = "use vocabulary";
+	   stmt.executeUpdate(usevocabulary);
+	   
+	   String showword = "select * from word";
+	   rs = stmt.executeQuery(showword);
+	   while(rs.next()){
+		   System.out.printf("%-14s\t",rs.getString(2));
+		   System.out.printf("%-14s\t\n",rs.getString(3));
+	   }
+   }
+   catch(ClassNotFoundException cnfe){
+	   cnfe.printStackTrace();
+   }
+   catch(SQLException se){
+	   se.printStackTrace();
+   }
+   finally{
+	   if(conn!=null)try{conn.close();} catch(SQLException se){}
+	   if(stmt!=null)try{stmt.close();} catch(SQLException se){}
+	   if(rs!=null)try{rs.close();} catch(SQLException se){}
+   }
+ }
+}
+*/
